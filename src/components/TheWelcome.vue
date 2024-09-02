@@ -10,19 +10,19 @@ import { TreaderOrderTdo, useApiStore } from '@/stores/apiStore'
 import moment from 'moment';
 
 const store = useApiStore();
-const getOrders = computed(() => {
+const getOrders = computed<any[]>(() => {
   return store.getOrders;
 });
-const getWalletStatus = computed(() => {
+const getWalletStatus = computed<any>(() => {
   return store.getWalletStatus;
 });
-const getSettings = computed(() => {
+const getSettings = computed<any[]>(() => {
   return store.getSettings;
 });
-const getMaxBoosts = computed(() => {
+const getMaxBoosts = computed<any[]>(() => {
   return store.getMaxBoosts;
 });
-const formatDate = (date)=> {
+const formatDate = (date:string)=> {
       return moment(date).format('YYYY-MM-DD HH:mm');
     };
 // lifecycle hooks

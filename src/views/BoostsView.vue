@@ -4,13 +4,13 @@ import {  useApiStore } from '@/stores/apiStore'
 import moment from 'moment';
 
 const store = useApiStore();
-const getStonFiBoosts = computed(() => {
+const getStonFiBoosts = computed<any>(() => {
   return store.getStonFiBoosts;
 });
-const getDeDustBoosts = computed(() => {
+const getDeDustBoosts = computed<any>(() => {
   return store.getDeDustBoosts;
 });
-const formatDate = (date)=> {
+const formatDate = (date:string)=> {
       return moment(date).format('YYYY-MM-DD HH:mm');
     };
 // lifecycle hooks

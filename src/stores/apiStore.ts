@@ -3,28 +3,28 @@ import { defineStore } from 'pinia'
 import axios from 'axios';
 
 export  class TreaderOrderTdo{
-  symbol: string;
-  token_address: string;
-  pool_address: string;
+  symbol: string | undefined;
+  token_address: string | undefined;
+  pool_address: string | undefined;
 
-  balance: number;
+  balance: number | undefined;
 
-  bigBalance: number;
+  bigBalance: number | undefined;
 
-  saleTonBalance: number;
+  saleTonBalance: number | undefined;
 
-  buyPrice: number;
+  buyPrice: number | undefined;
  
-  currentPrice: number;
+  currentPrice: number | undefined;
 
-  lowPrice: number;
+  lowPrice: number | undefined;
 
-  hiPrice: number;
+  hiPrice: number | undefined;
 
-  startedAt: Date;
-  updatedAt: Date;
-  status: 'init'| 'end'| 'run' ;
-  dex_type: string;
+  startedAt: Date | undefined;
+  updatedAt: Date | undefined;
+  status: 'init'| 'end'| 'run' | undefined;
+  dex_type: string | undefined;
 }
 
 export const useApiStore = defineStore('api', {
@@ -49,7 +49,7 @@ export const useApiStore = defineStore('api', {
 
   },
   actions: {
-    setApiUrl(newUrl) {
+    setApiUrl(newUrl:string) {
       this.apiUrl = newUrl;
     },
     async fetchOrders() {
