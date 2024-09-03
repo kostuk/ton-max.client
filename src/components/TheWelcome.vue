@@ -25,6 +25,13 @@ const getMaxBoosts = computed<any[]>(() => {
 const formatDate = (date:string)=> {
       return moment(date).format('YYYY-MM-DD HH:mm');
     };
+const formatCoinValue = (value:number)=> {
+      if(!value) return '-'
+      if(value>0.1) return value.toFixed(2);
+      if(value>0.01) return value.toFixed(3);
+      if(value>0.001) return value.toFixed(4);
+      return value.toExponential(2);
+};
 // lifecycle hooks
 onMounted(() => {
   setInterval(()=>{
@@ -75,10 +82,10 @@ onMounted(() => {
     <div v-for="order in getOrders" :key="order.symbol">
       <ul>
           <li>
-          symbol: {{ order.symbol }}, balance: {{ order.balance.toFixed(3) }}, buy Price: {{ order.buyPrice.toFixed(3) }}
+          symbol: {{ order.symbol }}, balance: {{ order.balance.toFixed(3) }}, buy Price: {{ formatCoinValue(order.buyPrice) }}
         </li>
-        <li> Low/ Current /  Price: {{ order.lowPrice?order.lowPrice.toFixed(3):'' }}
-           <strong>{{ order.currentPrice?order.currentPrice.toFixed(3):'' }}</strong>  {{ order.hiPrice?order.hiPrice.toFixed(3):'' }}    </li>
+        <li> Low/ Current /  Price: {{ formatCoinValue(order.lowPrice) }}
+           <strong>{{ formatCoinValue(order.currentPrice) }}</strong>  {{ formatCoinValue(order.hiPrice) }}    </li>
         <li> Status: <strong>{{ order.status }}</strong> DEX: {{ order.dex_type }}     </li>
         <li>Profit:   {{ (100*(order.currentPrice-order.buyPrice)/order.buyPrice).toFixed(1) }}%     </li>
     </ul>
@@ -95,7 +102,7 @@ onMounted(() => {
     <div v-for="boost in getMaxBoosts" :key="boost.symbol">
       <ul>
           <li>
-          {{ boost.title }},  apy: {{ (boost.apy*100).toFixed(1) }}% 
+          {{ boost.title }},  apy: {{ (boost.apy*100).toFixed(1) }}% LP : {{ boost.lp_total_supply_usd.toFixed(0)}} $
         </li>
         <li> Started At: {{ formatDate(boost.start_time) }}, status: {{ boost.status }}, dex: {{ boost.type }}       </li>
     </ul>
