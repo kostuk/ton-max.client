@@ -29,15 +29,17 @@ export  class TreaderOrderTdo{
 
 export const useApiStore = defineStore('api', {
   state: () => ({
-    apiUrl: 'http://213.171.25.36:3000/', 
-    //apiUrl: 'http://localhost:3000/', 
+    //apiUrl: 'http://213.171.25.36:3000/', 
+    apiUrl: 'http://localhost:3000/', 
     orders: [],
     walletStatus: {},
     status: [],
     maxBoosts: [],
     stonFiBoosts: [],
     deDustBoosts:[],
-  }),
+    arbitrations: [],
+    arbitrationOrders: [],
+    }),
   getters: {
     getApiUrl: (state) => state.apiUrl,
     getOrders: (state) => state.orders,
@@ -46,6 +48,8 @@ export const useApiStore = defineStore('api', {
     getMaxBoosts: (state) => state.maxBoosts,
     getStonFiBoosts: (state) => state.stonFiBoosts,
     getDeDustBoosts: (state) => state.deDustBoosts,
+    getArbitrations: (state) => state.arbitrations,
+    getArbitrationOrders: (state) => state.arbitrationOrders,
 
   },
   actions: {
@@ -103,7 +107,27 @@ export const useApiStore = defineStore('api', {
         }
             
       },
-
+      async fetchArbitrations() {
+        try {
+          const data = await axios.get(this.getApiUrl+'arbitrations/activity?all=1')
+            this.arbitrations = data.data
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      async fetchArbitrationOrders() {
+        try {
+          const data = await axios.get(this.getApiUrl+'arbitrations/orders')
+            this.arbitrationOrders = data.data
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      
       async fetchWalletStatus() {
         try {
           const data = await axios.get(this.getApiUrl+'wallet/status?db=1')

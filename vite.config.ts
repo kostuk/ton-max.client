@@ -17,6 +17,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/ton-max.client/'
+  //base: '/ton-max.client/'
 
 })
