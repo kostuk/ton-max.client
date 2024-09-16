@@ -29,8 +29,8 @@ export  class TreaderOrderTdo{
 
 export const useApiStore = defineStore('api', {
   state: () => ({
-    //apiUrl: 'http://213.171.25.36:3000/', 
-    apiUrl: 'http://localhost:3000/', 
+    apiUrl: 'http://213.171.25.36:3000/', 
+    //apiUrl: 'http://localhost:3000/', 
     orders: [],
     walletStatus: {},
     status: [],

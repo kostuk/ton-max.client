@@ -82,10 +82,19 @@ onMounted(() => {
     <div v-for="order in getOrders" :key="order.symbol">
       <ul>
           <li>
-          symbol: {{ order.symbol }}, balance: {{ order.balance.toFixed(3) }}, buy Price: {{ formatCoinValue(order.buyPrice) }}
+          symbol: {{ order.symbol }}, balance: {{ formatCoinValue(order.balance) }}, buy Price: {{ formatCoinValue(order.buyPrice) }}
         </li>
-        <li> Low/ Current /  Price: {{ formatCoinValue(order.lowPrice) }}
-           <strong>{{ formatCoinValue(order.currentPrice) }}</strong>  {{ formatCoinValue(order.hiPrice) }}    </li>
+        <li> Low/ Current /  Price: 
+          <span :class="{ warning: order?.lowPrecent<0.05 }">
+            {{ formatCoinValue(order.lowPrice) }}({{ order.lowPrecent?(order.lowPrecent*100).toFixed(1):'' }}%)
+          </span>
+          /
+           <strong>{{ formatCoinValue(order.currentPrice) }}</strong>  
+           /
+           <span :class="{ warning: order.hiPrecent<0.05 }">
+           {{ formatCoinValue(order.hiPrice) }}({{ order.hiPrecent?(order.hiPrecent*100).toFixed(1):'' }}%)    
+          </span>
+        </li>
         <li> Status: <strong>{{ order.status }}</strong> DEX: {{ order.dex_type }}     </li>
         <li>Profit:   {{ (100*(order.currentPrice-order.buyPrice)/order.buyPrice).toFixed(1) }}%     </li>
     </ul>
@@ -133,3 +142,20 @@ onMounted(() => {
 
   </WelcomeItem>
 </template>
+<style>
+.warning {
+  background-color: rgba(255, 0, 0, 0.5); /* красный с 50% прозрачности */
+  width: 200px;
+  height: 200px;
+  animation: fade 2s infinite alternate; /* Анимация, меняющая прозрачность */
+}
+
+@keyframes fade {
+  from {
+    background-color: rgba(255, 0, 0, 0.1); /* начальная прозрачность 50% */
+  }
+  to {
+    background-color: rgba(255, 0, 0, 0.7); /* полная непрозрачность */
+  }
+}
+</style>
