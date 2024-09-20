@@ -94,6 +94,8 @@ onMounted(() => {
            <span :class="{ warning: order.hiPrecent<0.05 }">
            {{ formatCoinValue(order.hiPrice) }}({{ order.hiPrecent?(order.hiPrecent*100).toFixed(1):'' }}%)    
           </span>
+          <router-link :to="{ name: 'order', params: { id: order.id } }">Chart</router-link>
+
         </li>
         <li> Status: <strong>{{ order.status }}</strong> DEX: {{ order.dex_type }}     </li>
         <li>Profit:   {{ (100*(order.currentPrice-order.buyPrice)/order.buyPrice).toFixed(1) }}%     </li>

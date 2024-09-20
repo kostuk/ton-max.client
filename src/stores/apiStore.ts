@@ -29,10 +29,11 @@ export  class TreaderOrderTdo{
 
 export const useApiStore = defineStore('api', {
   state: () => ({
-    apiUrl: 'http://213.171.25.36:3000/', 
-    //apiUrl: 'http://localhost:3000/', 
+    //apiUrl: 'http://213.171.25.36:3000/', 
+    apiUrl: 'http://localhost:3000/', 
     orders: [],
     walletStatus: {},
+    order: {},
     status: [],
     maxBoosts: [],
     stonFiBoosts: [],
@@ -50,6 +51,7 @@ export const useApiStore = defineStore('api', {
     getDeDustBoosts: (state) => state.deDustBoosts,
     getArbitrations: (state) => state.arbitrations,
     getArbitrationOrders: (state) => state.arbitrationOrders,
+    getOrder: (state) => <any>state.order,
 
   },
   actions: {
@@ -132,6 +134,16 @@ export const useApiStore = defineStore('api', {
         try {
           const data = await axios.get(this.getApiUrl+'wallet/status?db=1')
             this.walletStatus = data.data
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      async fetchOrder(id:string) {
+        try {
+          const data = await axios.get(this.getApiUrl+'trade/order/'+id)
+            this.order = data.data
           }
           catch (error) {
             console.log(error)
