@@ -81,7 +81,7 @@ onMounted(() => {
             balance: <span v-for="token in getWalletStatus.tokens" :key="token.symbol">
               {{ token.symbol }} : {{ token.balance.toFixed(3) }},
             </span>
-            <input type="text" v-model="updateSetting.symbol" /> <button @click="store.addIgnoreTokens(updateSetting.symbol); updateSetting.symbol = ''">Add</button>
+            <input type="text" v-model="updateSetting.symbol" /> <button @click="store.addTokens(updateSetting.symbol); updateSetting.symbol = ''">Add</button>
 
           </li>
 
@@ -89,7 +89,7 @@ onMounted(() => {
           <li>
             ignoreTokens:
             <span v-for="symbol in getWalletStatus.ignoreTokens" :key="symbol">
-              {{ symbol }},
+              {{ symbol }} <button @click="store.deleteIgnoreTokens(symbol)">x</button>,
 
             </span>
             <input type="text" v-model="updateSetting.ignoreToken" /> <button @click="store.addIgnoreTokens(updateSetting.ignoreToken); updateSetting.ignoreToken = ''">Add</button>

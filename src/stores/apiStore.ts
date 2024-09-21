@@ -151,7 +151,7 @@ export const useApiStore = defineStore('api', {
             
       },
       
-      async updateOrderLimit(id:string, name:string, value:number) {
+      async updateOrderLimit(id:string, name:string, value:string) {
         try {
            await axios.put(this.getApiUrl+`trade/order/${id}/limit/`,
             {
@@ -169,6 +169,15 @@ export const useApiStore = defineStore('api', {
       async addIgnoreTokens(tokens:string) {
         try {
            await axios.get(this.getApiUrl+`wallet/ignore/tokens?tokens=${tokens}`)
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      async deleteIgnoreTokens(tokens:string) {
+        try {
+           await axios.delete(this.getApiUrl+`wallet/ignore/tokens?tokens=${tokens}`)
           }
           catch (error) {
             console.log(error)

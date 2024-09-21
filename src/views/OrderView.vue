@@ -165,8 +165,8 @@ const formatDate = (date:string)=> {
 };
 
 const limit = ref({
-  low: null, // начальное значение
-  hi: null, // начальное значение
+  low: '', // начальное значение
+  hi: '', // начальное значение
 });
 
 
@@ -180,11 +180,11 @@ watch(() => store.getOrder, (newOrder) => {
   }
 }, { immediate: true });
 // Логика обновления лимитов
-const updateLimit = (key: string, value: number) => {
+const updateLimit = (key: string, value: string) => {
   console.log(`Обновление лимита для ${key}: новое значение = ${value}`);
   // Допустим, здесь можно добавить логику для отправки данных на сервер
     console.log(order);
-    store.updateOrderLimit(<string>route.params.id, key, value);
+    store.updateOrderLimit(<string>route.params.id, key, <>value);
 };
 // lifecycle hooks
 onMounted(() => {
