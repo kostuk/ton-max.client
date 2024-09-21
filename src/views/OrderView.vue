@@ -1,5 +1,5 @@
 <script setup lang="ts">  
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import {  useApiStore } from '@/stores/apiStore'
 import moment from 'moment';
 import { useRoute } from 'vue-router'
@@ -10,7 +10,74 @@ const store = useApiStore();
 const order = computed<any>(() => {
   return store.getOrder;
 });
-const options = computed<any>(() => {});
+
+const priceOptions =computed<any>(() => {
+          return {
+            chart: {
+              height: 350,
+              type: 'line',
+              
+            },
+            stroke: {
+              width: [1, 1, 1],
+              curve: 'straight',
+              dashArray: [0, 0, 1]
+            },
+            dataLabels: {
+              enabled: false
+            },
+            title: {
+              text: 'Limit price',
+              align: 'left'
+            },
+          }
+        });
+
+        const apyOptions =computed<any>(() => {
+          return {
+            chart: {
+              height: 350,
+              type: 'line',
+              
+            },
+            stroke: {
+              width: [1],
+              curve: 'straight',
+              dashArray: [0]
+            },
+            dataLabels: {
+              enabled: false
+            },
+            title: {
+              text: 'Apy',
+              align: 'left'
+            },
+          }
+        });
+
+
+        const lpOptions =computed<any>(() => {
+          return {
+            chart: {
+              height: 350,
+              type: 'line',
+              
+            },
+            stroke: {
+              width: [1],
+              curve: 'straight',
+              dashArray: [0]
+            },
+            dataLabels: {
+              enabled: false
+            },
+            title: {
+              text: 'Lp k$',
+              align: 'left'
+            },
+          }
+        });
+
 const priceSeries =computed<any>(() => {
     
     let points = store.getOrder.points || [];
@@ -21,23 +88,25 @@ const priceSeries =computed<any>(() => {
     let dataPrice = [];
     let dataHi = [];
     for(let p of points){
-      dataLow.push({x:p.tiks, y:p.low});
-      dataHi.push({x:p.tiks, y:p.hi});
-      dataPrice.push({x:p.tiks, y:p.value});
+     let t =  Math.floor(p.tiks/60);
+      dataLow.push({x:t, y:p.low});
+      dataHi.push({x:t, y:p.hi});
+      dataPrice.push({ x:t, y:p.value});
     }
     let o =  [{
             name: "Hi",
             color: "#F7C705",
             data: dataHi
           }, {
-            name: "Low",
-            color: "#012066",
-            data: dataLow
-          }, {
             name: "Price",
             color: "#012033",
             data: dataPrice
-          }];
+          },
+          {
+            name: "Low",
+            color: "#012066",
+            data: dataLow
+          }, ];
         return o;
 });
 
@@ -49,7 +118,8 @@ const apySeries =computed<any>(() => {
   }
     let data = [];
     for(let p of points){
-      data.push({x:p.tiks, y:p.apy});
+      let t =  Math.floor(p.tiks/60);
+      data.push({x:t, y: Math.floor(p.apy*100)});
     }
     let o = [{
             name: "Apy",
@@ -69,7 +139,8 @@ const lpSeries =computed<any>(() => {
   }
     let data = [];
     for(let p of points){
-      data.push({x:p.tiks, y:p.lp});
+      let t =  Math.floor(p.tiks/60);
+      data.push({x:t, y: Math.floor(p.lp/1000)});
     }
     let o =  [{
             name: "LP",
@@ -87,10 +158,33 @@ const formatDate = (date:string)=> {
     };
     const formatCoinValue = (value:number)=> {
       if(!value) return '-'
-      if(value>0.1) return value.toFixed(2);
-      if(value>0.01) return value.toFixed(3);
-      if(value>0.001) return value.toFixed(4);
+      if(value>0.1) return value.toFixed(4);
+      if(value>0.01) return value.toFixed(5);
+      if(value>0.001) return value.toFixed(6);
       return value.toExponential(2);
+};
+
+const limit = ref({
+  low: null, // начальное значение
+  hi: null, // начальное значение
+});
+
+
+watch(() => store.getOrder, (newOrder) => {
+  if (newOrder && newOrder.lowUserPrice) {
+    limit.value.low = newOrder.lowUserPrice;
+  }
+  
+  if (newOrder && newOrder.hiUserPrice) {
+    limit.value.hi = newOrder.hiUserPrice;
+  }
+}, { immediate: true });
+// Логика обновления лимитов
+const updateLimit = (key: string, value: number) => {
+  console.log(`Обновление лимита для ${key}: новое значение = ${value}`);
+  // Допустим, здесь можно добавить логику для отправки данных на сервер
+    console.log(order);
+    store.updateOrderLimit(<string>route.params.id, key, value);
 };
 // lifecycle hooks
 onMounted(() => {
@@ -100,6 +194,8 @@ onMounted(() => {
   },10_000);
   store.fetchOrder(<string>route.params.id);
 })
+
+
 </script>
 
 
@@ -120,22 +216,34 @@ onMounted(() => {
            <span :class="{ warning: order.hiPrecent<0.05 }">
            {{ formatCoinValue(order.hiPrice) }}({{ order.hiPrecent?(order.hiPrecent*100).toFixed(1):'' }}%)    
           </span>
-          <router-link :to="{ name: 'order', params: { id: order.id } }">Chart</router-link>
+          
 
         </li>
         <li> Status: <strong>{{ order.status }}</strong> DEX: {{ order.dex_type }}     </li>
         <li>Profit:   {{ (100*(order.currentPrice-order.buyPrice)/order.buyPrice).toFixed(1) }}%     </li>
-    </ul>
+        <div>
+         HI <input name="hiPrice" type="number" v-model="limit.hi"/></input> <button @click="updateLimit('hiPrice', limit.hi)">update</button>
+          <button @click="limit.hi = formatCoinValue(order.hiPrice)">{{formatCoinValue(order.hiPrice)}}</button>
+
+          {{ order.hiUserPrice?((order.hiUserPrice-order.buyPrice)/order.currentPrice*100).toFixed(1):'' }}%    
+        </div>
+        <div>
+         Low <input name="lowPrice" type="number" v-model="limit.low"/></input> 
+          <button @click="updateLimit('lowPrice', limit.low)">update</button>
+           <button @click="limit.low = formatCoinValue(order.lowPrice)">{{formatCoinValue(order.lowPrice)}}</button>
+           {{ order.lowUserPrice?((order.lowUserPrice-order.buyPrice)/order.currentPrice*100).toFixed(1):'' }}%    
+          </div>
+      </ul>
+
 
     <div>
-      <apexchart width="500" type="line" :options="options" :series="priceSeries"></apexchart>
+      <apexchart width="1000" height="300" type="line" :options="priceOptions" :series="priceSeries"></apexchart>
     </div>
     <div>
-      <apexchart width="500" type="line" :options="options" :series="apySeries"></apexchart>
+      <apexchart width="1000" height="300" type="line" :options="apyOptions" :series="apySeries"></apexchart>
     </div>
     <div>
-      <apexchart width="500" type="line" :options="options" :series="lpSeries"></apexchart>
+      <apexchart width="1000" height="300" type="line" :options="lpOptions" :series="lpSeries"></apexchart>
     </div>
-
 </template>
 

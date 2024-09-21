@@ -151,6 +151,60 @@ export const useApiStore = defineStore('api', {
             
       },
       
+      async updateOrderLimit(id:string, name:string, value:number) {
+        try {
+           await axios.put(this.getApiUrl+`trade/order/${id}/limit/`,
+            {
+              name: name,
+              value: value
+
+            }
+          )
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      async addIgnoreTokens(tokens:string) {
+        try {
+           await axios.get(this.getApiUrl+`wallet/ignore/tokens?tokens=${tokens}`)
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+
+      async addTokens(tokens:string) {
+        try {
+           await axios.get(this.getApiUrl+`wallet/reload?tokens=${tokens}`)
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      async updateBitInTon(total:string) {
+        try {
+           await axios.get(this.getApiUrl+`wallet/update/BitInTon?value=${total}`)
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      async updateBitInUsd(total:string) {
+        try {
+           await axios.get(this.getApiUrl+`wallet/update/BitInUsd?value=${total}`)
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
+      
+      
     }
   
 });

@@ -32,6 +32,15 @@ const formatCoinValue = (value:number)=> {
       if(value>0.001) return value.toFixed(4);
       return value.toExponential(2);
 };
+
+const updateSetting = ref({
+  ignoreToken: '',
+  bitInTon: '',
+  bitInUsd: '',
+  symbol: ''
+  
+});
+
 // lifecycle hooks
 onMounted(() => {
   setInterval(()=>{
@@ -60,12 +69,30 @@ onMounted(() => {
         </li>
         <li>
           Bid In Ton : {{ getWalletStatus.bitInTon }} tons
+          <input type="text" v-model="updateSetting.bitInTon" /> <button @click="store.updateBitInTon(updateSetting.bitInTon); updateSetting.bitInTon = ''">Update</button>
+        </li>
+        
+        <li>
+          Bid In Usdt : {{ getWalletStatus.bitInUsd }} USDT
+          <input type="text" v-model="updateSetting.bitInUsd" /> <button @click="store.updateBitInUsd(updateSetting.bitInUsd); updateSetting.bitInUsd = ''">Update</button>
+
         </li>
           <li>
-            <span v-for="token in getWalletStatus.tokens" :key="token.symbol">
+            balance: <span v-for="token in getWalletStatus.tokens" :key="token.symbol">
               {{ token.symbol }} : {{ token.balance.toFixed(3) }},
+            </span>
+            <input type="text" v-model="updateSetting.symbol" /> <button @click="store.addIgnoreTokens(updateSetting.symbol); updateSetting.symbol = ''">Add</button>
+
+          </li>
+
+          
+          <li>
+            ignoreTokens:
+            <span v-for="symbol in getWalletStatus.ignoreTokens" :key="symbol">
+              {{ symbol }},
 
             </span>
+            <input type="text" v-model="updateSetting.ignoreToken" /> <button @click="store.addIgnoreTokens(updateSetting.ignoreToken); updateSetting.ignoreToken = ''">Add</button>
 
           </li>
         </ul>
@@ -94,7 +121,7 @@ onMounted(() => {
            <span :class="{ warning: order.hiPrecent<0.05 }">
            {{ formatCoinValue(order.hiPrice) }}({{ order.hiPrecent?(order.hiPrecent*100).toFixed(1):'' }}%)    
           </span>
-          <router-link :to="{ name: 'order', params: { id: order.id } }">Chart</router-link>
+          <router-link :to="{ name: 'order', params: { id: order.id } }">More</router-link>
 
         </li>
         <li> Status: <strong>{{ order.status }}</strong> DEX: {{ order.dex_type }}     </li>
