@@ -142,7 +142,11 @@ onMounted(() => {
           <li>
           {{ boost.title }},  apy: {{ (boost.apy*100).toFixed(1) }}% LP : {{ boost.lp_total_supply_usd.toFixed(0)}} $
         </li>
-        <li> Started At: {{ formatDate(boost.start_time) }}, status: {{ boost.status }}, dex: {{ boost.type }}       </li>
+        <li> Started At: {{ formatDate(boost.start_time) }}, status: {{ boost.status }}, dex: {{ boost.type }} 
+          
+          <button v-if="boost.apy>10 && boost.status=='end'" @click="store.buyBoostUsd(boost.id)">Buy</button> <br/>
+          <small>{{boost.description}}</small>      </li>
+        <ht/>
     </ul>
     </div>
 
