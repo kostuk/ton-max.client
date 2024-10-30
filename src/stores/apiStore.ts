@@ -29,8 +29,8 @@ export  class TreaderOrderTdo{
 
 export const useApiStore = defineStore('api', {
   state: () => ({
-    apiUrl: 'http://213.171.25.36:3000/', 
-    //apiUrl: 'http://localhost:3000/', 
+    //apiUrl: 'http://213.171.25.36:3000/', 
+    apiUrl: 'http://localhost:3000/', 
     orders: [],
     walletStatus: {},
     order: {},
@@ -40,6 +40,8 @@ export const useApiStore = defineStore('api', {
     deDustBoosts:[],
     arbitrations: [],
     arbitrationOrders: [],
+    messages: [],
+    locations: [],
     }),
   getters: {
     getApiUrl: (state) => state.apiUrl,
@@ -52,6 +54,8 @@ export const useApiStore = defineStore('api', {
     getArbitrations: (state) => state.arbitrations,
     getArbitrationOrders: (state) => state.arbitrationOrders,
     getOrder: (state) => <any>state.order,
+    getMessages: (state) => <any>state.messages,
+    getLocations: (state) => <any>state.locations,
 
   },
   actions: {
@@ -221,7 +225,55 @@ export const useApiStore = defineStore('api', {
         }
             
       },
-      
+      async fetchGetMessages(){
+        try {
+          let data =  await axios.get(this.getApiUrl+`probli/locMessages`)
+          this.messages = data.data
+         }
+         catch (error) {
+           console.log(error)
+       }
+      },
+      async fetchGetLocations(){
+        try {
+          let data = await axios.get(this.getApiUrl+`probli/locWords`)
+          this.locations = data.data
+         }
+         catch (error) {
+           console.log(error)
+       }
+      },
+      async updateLocations(id:string, title:string, words:string[], lat:number, lng:number) {
+        try {
+          if(id){
+            await axios.put(this.getApiUrl+`probli/locWords/${id}`,
+              {
+                title: title,
+                words: words,
+                lat:lat,
+                lng:lng
+              }
+  
+            )
+  
+          }else{
+            await axios.post(this.getApiUrl+`probli/locWords`,
+              {
+                title: title,
+                words: words,
+                lat:lat,
+                lng:lng
+              }
+  
+            )
+  
+          }
+          }
+          catch (error) {
+            console.log(error)
+        }
+            
+      },
       
     }
   

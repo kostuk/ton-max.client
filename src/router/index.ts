@@ -34,6 +34,22 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/OrderView.vue')
     },
+    {
+      path: '/pobki/location',
+      name: 'pobki_location',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/pobki/LocationView.vue')
+    },
+    {
+      path: '/pobki/message',
+      name: 'pobki_message',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/pobki/MessageView.vue')
+    },
   ]
 })
 
