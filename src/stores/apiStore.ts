@@ -42,6 +42,7 @@ export const useApiStore = defineStore('api', {
     arbitrationOrders: [],
     messages: [],
     locations: [],
+    locActions:[],
     }),
   getters: {
     getApiUrl: (state) => state.apiUrl,
@@ -56,6 +57,7 @@ export const useApiStore = defineStore('api', {
     getOrder: (state) => <any>state.order,
     getMessages: (state) => <any>state.messages,
     getLocations: (state) => <any>state.locations,
+    getLocActions: (state) => <any>state.locActions,
 
   },
   actions: {
@@ -242,6 +244,30 @@ export const useApiStore = defineStore('api', {
          catch (error) {
            console.log(error)
        }
+      },
+      async fetchGetLastActions(){
+        try {
+          let data = await axios.get(this.getApiUrl+`probli/locAction/last`)
+          this.locActions = data.data
+         }
+         catch (error) {
+           console.log(error)
+       }
+      },
+      
+      async  processMessage(id:string){
+        try {
+          let data = await axios.post(this.getApiUrl+`probli/locMessages/${id}/process`,
+              {
+                
+              }
+  
+            )
+            return data.data;
+          }
+          catch (error) {
+            console.log(error)
+        }
       },
       async updateLocations(id:string, title:string, words:string[], lat:number, lng:number) {
         try {

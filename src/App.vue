@@ -15,6 +15,7 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/arbitrations">Arbitrations</RouterLink>
         <RouterLink to="/pobki/location">pobki loc</RouterLink>
         <RouterLink to="/pobki/message">pobki message</RouterLink>
+        <RouterLink to="/pobki/action">Last Action</RouterLink>
       </nav>
     </div>
   </header>
