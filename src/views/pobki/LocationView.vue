@@ -8,6 +8,10 @@ const getLocations = computed<any>(() => {
   if(filterText.value){
     return store.getLocations.filter(item=>
     item.title.toLowerCase().includes(filterText.value.toLowerCase())
+    ||
+    (item.words.length>1 && item.words[0].toLowerCase().includes(filterText.value.toLowerCase()))
+    ||
+    (item.words.length>1 && item.words[1].toLowerCase().includes(filterText.value.toLowerCase()))
 
     );
   }else{
