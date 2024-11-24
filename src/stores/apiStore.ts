@@ -43,6 +43,7 @@ export const useApiStore = defineStore('api', {
     messages: [],
     locations: [],
     locActions:[],
+    cities:[],
     }),
   getters: {
     getApiUrl: (state) => state.apiUrl,
@@ -58,6 +59,7 @@ export const useApiStore = defineStore('api', {
     getMessages: (state) => <any>state.messages,
     getLocations: (state) => <any>state.locations,
     getLocActions: (state) => <any>state.locActions,
+    getCities: (state) => <any>state.cities,
 
   },
   actions: {
@@ -245,6 +247,15 @@ export const useApiStore = defineStore('api', {
            console.log(error)
        }
       },
+      async fetchGetCities(){
+        try {
+          let data = await axios.get(this.getApiUrl+`probli/cities`)
+          this.cities = data.data
+         }
+         catch (error) {
+           console.log(error)
+       }
+      },
       async fetchGetLastActions(){
         try {
           let data = await axios.get(this.getApiUrl+`probli/locAction/last`)
@@ -269,7 +280,7 @@ export const useApiStore = defineStore('api', {
             console.log(error)
         }
       },
-      async updateLocations(id:string, title:string, words:string[], lat:number, lng:number) {
+      async updateLocations(id:string, title:string, words:string[], lat:number, lng:number, city:string) {
         try {
           if(id){
             await axios.put(this.getApiUrl+`probli/locWords/${id}`,
@@ -277,7 +288,8 @@ export const useApiStore = defineStore('api', {
                 title: title,
                 words: words,
                 lat:lat,
-                lng:lng
+                lng:lng,
+                city: city
               }
   
             )
@@ -288,7 +300,8 @@ export const useApiStore = defineStore('api', {
                 title: title,
                 words: words,
                 lat:lat,
-                lng:lng
+                lng:lng,
+                city: city
               }
   
             )

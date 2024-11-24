@@ -25,10 +25,12 @@ const formatDate = (date:string)=> {
 onMounted(() => {
 
   store.fetchGetLocations();
+  store.fetchGetCities();
 })
 const filterText = ref('');
 const updateSetting = ref({
   _id: '',
+  city:'kh',
   title: '',
   words_0: '',
   words_1: '',
@@ -45,7 +47,7 @@ const initUpdateSetting = (item:any)=>{
     updateSetting.value.words_1=item.words.length>1?item.words[1]:'';
     updateSetting.value.lat=item.lat;
     updateSetting.value.lng=item.lng;
-    
+    updateSetting.value.city = item.city;
   }else{
     updateSetting.value={
       _id: '',
@@ -54,6 +56,7 @@ const initUpdateSetting = (item:any)=>{
       words_1: '',
       lat: null,
       lng: null,
+      city:updateSetting.value.city
     };
   }
   console.log(updateSetting);
@@ -71,7 +74,7 @@ const saveUpdateSetting= ()=>{
   }
   
   store.updateLocations(updateSetting.value._id, updateSetting.value.title, words,
-    updateSetting.value.lat, updateSetting.value.lng
+    updateSetting.value.lat, updateSetting.value.lng, updateSetting.value.city
 
   );
   store.fetchGetLocations();
@@ -80,7 +83,11 @@ const saveUpdateSetting= ()=>{
 
 <template>
   <div class="about">
-    <h1>Locations</h1>
+    <h1>Locations</h1> 
+    <select v-model="updateSetting.city">
+      <option  v-for="city in store.getCities" :key="city.code" :value="city.code" >{{ city.title}}</option>
+
+    </select>
     <button v-on:click="initUpdateSetting(null)">new</button>
     <br/>
     <input 
@@ -98,8 +105,8 @@ const saveUpdateSetting= ()=>{
 
   </div>
 
-    <ul v-for="arb in getLocations" :key="arb.id" >
-      <li>{{ arb.title}} {{ formatDate(arb.date) }}
+    <ul v-for="arb in getLocations" :key="arb.id">
+      <li>{{ arb.city}} - {{ arb.title}} {{ formatDate(arb.date) }}
       </li>
 
       <small v-for="word in arb.words" :key="word">

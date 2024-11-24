@@ -33,7 +33,7 @@ const saveUpdateSetting= (id:string)=>{
     <h1>Messages</h1>
     
     <ul v-for="arb in getMessages" :key="arb._id">
-      <li>{{ arb.title}} {{ formatDate(arb.date) }} 
+      <li>{{ arb.city}} {{ arb.title}} {{ formatDate(arb.date) }} 
         
         <button v-if="arb.chat_mess_id
 " @click="store.processMessage(arb._id)">Process</button></li>
